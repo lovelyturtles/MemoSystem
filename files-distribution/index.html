@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Praying this works</title>
+        <script>
+            function handleGet(){
+
+                function callBack(){
+
+                    //this will be a race condition with send() which is why we need to do
+                    //an event listener "load" for getRequest to actually load after it sends
+                    //before we try to parse it.
+                    let theDiv = document.getElementById("dynamicPart");
+                    let stringMemos = getRequest.responseText;
+
+                    if ( stringMemos.length === 0 ){
+                        theDiv.innerHTML = "<h3>The Memos:</h3><p>There are no memos in the system. Try posting one!</p>";
+                    }
+
+                    else {
+                        let memos = JSON.parse(stringMemos);
+
+                        console.log(memos);
+                        theDiv.innerHTML = "<h3>The Memos:</h3>";
+                        let numMemos = Object.keys(memos).length;
+
+                        for (let i = 0; i < numMemos; i++) {
+
+                            let memoID = "memo: " + memos[i]['content']
+                            let lastEdited = "last edited by: " + memos[i]["last_edited_by"]
+                            theDiv.innerHTML += "<p>" + memoID + "</p>";
+                            theDiv.innerHTML += "<p>" + lastEdited + "</p>";
+                            let deleteID = "a" + memos[i]['memo_id']
+                            let deleteUrl = "api/memos/" + memos[i]['memo_id']
+                            theDiv.innerHTML += "<button id='" + deleteID + "' type='button' onClick='handleDelete(" + "\"" + deleteUrl + "\"" + ")'>DELETE</button>"
+
+                        }
+                    }
+
+                }
+
+                let getRequest = new XMLHttpRequest();
+                getRequest.addEventListener( "load", callBack );
+                getRequest.open("GET", "api/memos");
+                getRequest.setRequestHeader("Accept", "application/json");
+                getRequest.send();
+
+            }
+
+            function handleDelete(deleteURL){
+
+                function callBackDelete(){
+                    handleGet();
+                }
+
+                let deleteRequest = new XMLHttpRequest();
+                deleteRequest.addEventListener("load", callBackDelete);
+                deleteRequest.open("DELETE", deleteURL);
+                deleteRequest.setRequestHeader("Accept", "application/json");
+                deleteRequest.send();
+
+            }
+
+            function handlePost(){
+
+                function callBackPost(){
+
+                    handleGet();
+
+                }
+
+                let postRequest = new XMLHttpRequest();
+                postRequest.addEventListener("load", callBackPost);
+                // We want to get the IP address, but I don't want to talk too much about CORS!
+                let postInput = document.getElementById("postContent").value
+                let object = { content: postInput };
+                let jsonInput = JSON.stringify(object);
+                postRequest.open("POST", "api/memos");
+                postRequest.setRequestHeader("Accept", "application/json");
+                postRequest.send(jsonInput);
+
+            }
+
+        </script>
+    </head>
+
+    <body>
+        <h1>Susie's Memo System!</h1>
+        <p>Add one of your own memos by typing something in and clicking POST</p>
+        <label for="postContent"></label><input type="text" id="postContent"/>
+        <button id="postButton" type="button" onClick='handlePost()'>POST</button><br>
+        <button type="button" onClick='handleGet()'>GET memos</button>
+        <div id="dynamicPart"></div>
+    </body>
+
+</html>
+
+
+<!--
+To send an HTTP request,
+1. create an XMLHttpRequest object,
+2. open a URL and
+3. send the request
+this starts on line 20
+
+After the transaction completes, the object will contain useful information
+such as the response body and the HTTP status of the result.
+-->

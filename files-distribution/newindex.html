@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Testing</title>
+        <script>
+            function handleInput() {
+                // this is a closure, gets variables
+                // from method it is in
+                function loadedEventCallback() {
+                    alert(getRequest.responseText);
+                }
+
+                function handleGet(){
+
+                    getRequest.open("GET", "http://goose.cs.umanitoba.ca:8265/api/memos");
+                    // hey, we can do this, but don't have to (in this case)
+                    getRequest.setRequestHeader("Accept", "application/json");
+                    getRequest.send();
+
+                }
+
+                function handleDelete(){
+                    var deleteRequest = new XMLHttpRequest();
+                    deleteRequest.open("DELETE", deleteUrl);
+                    deleteRequest.setRequestHeader("Accept", "application/json");
+                    deleteRequest.send();
+                    handleGet();
+                }
+
+                function handlePost(){
+                    var postRequest = new XMLHttpRequest();
+                    postRequest.open("POST", "http://goose.cs.umanitoba.ca:8265/api/memos");
+                    postRequest.open("Accept", "application/json");
+                    postRequest.send();
+                    handleGet();
+                }
+
+                function loadedEventCallback2() {
+                    var theDiv = document.getElementById("getOutput");
+                    var memos = JSON.parse(getRequest.responseText)
+
+                    console.log(memos);
+                    var memSize = Object.keys(memos).length;
+                    theDiv.innerHTML = "<h3>The Memos:</h3>"
+                    for ( let i = 0; i < memSize; i++ ) {
+
+                        theDiv.innerHTML += "<p>memo: " + memos[i]['content'] + "</p>"
+                        theDiv.innerHTML += "<p>last edited by: " + memos[i]["last_edited_by"] + "</p>"
+                        var deleteID = "a" + memos[i]['memo_id']
+                        var deleteUrl = "http://goose.cs.umanitoba.ca:8265/api/memos/" + memos[i]['memo_id']
+                        theDiv.innerHTML += "<button id='deleteID' type='button'>DELETE</button>"
+                        document.getElementById("deleteID").addEventListener("click", handleDelete)
+
+                    }
+
+                }
+
+                // basis from
+                // https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/Using_XMLHttpRequest
+                // probably will not work from localhost!
+                var getRequest = new XMLHttpRequest();
+                getRequest.addEventListener("load", loadedEventCallback2);
+
+            }
+
+        </script>
+    </head>
+
+    <body>
+        <h1>Susie's Memo System!</h1>
+        <button type="button" onClick='handleInput()'>GET memos</button>
+        <div id='getOutput'></div>
+        <p>Add one of your own by POSTing a memo</p>
+        <label for="postContent"><input type="text" id="postContent"/></label>
+        <button id="postButton" type="button" onClick='handleInput()'>POST</button><br>
+    </body>
+
+</html>
