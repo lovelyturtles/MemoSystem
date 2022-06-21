@@ -88,11 +88,16 @@
 
     <body>
         <h1>Susie's Memo System!</h1>
-        <p>Add one of your own memos by typing something in and clicking POST</p>
+
+        <p>Post a memo to our memo system:</p>
         <label for="postContent"></label><input type="text" id="postContent"/>
-        <button id="postButton" type="button" onClick='handlePost()'>POST</button><br>
-        <button type="button" onClick='handleGet()'>GET memos</button>
-        <div id="dynamicPart"></div>
+        <button id="postButton" type="button" onClick='handlePost()'>POST</button><br><br>
+
+        <div id="dynamicPart">
+            <p>Click to see all the memos currently in the system</p>
+            <button type="button" onClick='handleGet()'>GET memos</button>
+        </div>
+
     </body>
 
 </html>
