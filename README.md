@@ -7,6 +7,3 @@ Please log into aviary to run my server. I have also hardcoded goose in my web c
 1. Run server.py on a terminal with the command ```python3 server.py```
 2. Open a web browser and go to ```http://localhost:8265/index.html```
 3. From there, you can add and delete posts to the memo system
-
-## Issues
-* If you exit my server with Control C before you close the browser, you'll have to press Control C again for the program to actually close. 
