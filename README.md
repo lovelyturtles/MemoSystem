@@ -1,6 +1,6 @@
 # Memo System
 
-I've created a web server that uses a REST API. index.html is a very client that's able to make requests to the server. 
+I've created a web server that uses a REST API. index.html is a client that's able to make requests to the server. 
 
 ## How to Run the Code
 Please log into aviary to run my server. I have also hardcoded goose in my web client so please use these steps:
